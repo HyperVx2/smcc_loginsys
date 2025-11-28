@@ -45,7 +45,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="loginsys" android:host="loginsys.com" />
+                <data android:scheme="smccattendance" android:host="smccattendance.com" />
             </intent-filter>
 
         </activity>

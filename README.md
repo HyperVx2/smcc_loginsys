@@ -1,4 +1,4 @@
-# loginSys
+# SMCC Attendance
 
 A new Flutter project.
 
