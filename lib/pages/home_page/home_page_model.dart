@@ -14,6 +14,9 @@ class HomePageModel extends FlutterFlowModel<HomePageWidget> {
 
   String displayFamilyName = 'localFamilyName';
 
+  /// Get which step error occured.
+  String errorCall = '0';
+
   ///  State fields for stateful widgets in this page.
 
   // Stores action output result for [Backend Call - API (rfidUserList)] action in HomePage widget.
