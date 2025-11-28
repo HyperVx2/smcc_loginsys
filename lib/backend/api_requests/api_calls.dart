@@ -12,7 +12,7 @@ class RfidUserListCall {
   static Future<ApiCallResponse> call() async {
     return ApiManager.instance.makeApiCall(
       callName: 'rfidUserList',
-      apiUrl: 'http://lonita.duckdns.org:8980/api/attendance_db/rfid/users',
+      apiUrl: 'http://192.168.0.13:8980/api/attendance_db/rfid/users',
       callType: ApiCallType.GET,
       headers: {
         'Authorization': 'Basic bG9naW5zeXM6Zm9vYmFyMTIz',
@@ -35,7 +35,7 @@ class RfidUserCall {
     return ApiManager.instance.makeApiCall(
       callName: 'rfidUser',
       apiUrl:
-          'http://lonita.duckdns.org:8980/api/attendance_db/rfid/${rfidUID}',
+          'http://192.168.0.13:8980/api/attendance_db/rfid/${rfidUID}',
       callType: ApiCallType.GET,
       headers: {
         'Authorization': 'Basic bG9naW5zeXM6Zm9vYmFyMTIz',
@@ -64,7 +64,7 @@ class GoogleUserListCall {
   static Future<ApiCallResponse> call() async {
     return ApiManager.instance.makeApiCall(
       callName: 'googleUserList',
-      apiUrl: 'http://lonita.duckdns.org:8980/api/attendance_db/google/users',
+      apiUrl: 'http://192.168.0.13:8980/api/attendance_db/google/users',
       callType: ApiCallType.GET,
       headers: {
         'Authorization': 'Basic bG9naW5zeXM6Zm9vYmFyMTIz',
@@ -87,7 +87,7 @@ class GoogleUserCall {
     return ApiManager.instance.makeApiCall(
       callName: 'googleUser',
       apiUrl:
-          'http://lonita.duckdns.org:8980/api/attendance_db/google/users/${userKey}',
+          'http://192.168.0.13:8980/api/attendance_db/google/users/${userKey}',
       callType: ApiCallType.GET,
       headers: {
         'Authorization': 'Basic bG9naW5zeXM6Zm9vYmFyMTIz',
@@ -135,7 +135,7 @@ class GoogleUserPhotoCall {
     return ApiManager.instance.makeApiCall(
       callName: 'googleUserPhoto',
       apiUrl:
-          'http://lonita.duckdns.org:8980/api/attendance_db/google/users/${userKey}/photo',
+          'http://192.168.0.13:8980/api/attendance_db/google/users/${userKey}/photo',
       callType: ApiCallType.GET,
       headers: {
         'Authorization': 'Basic bG9naW5zeXM6Zm9vYmFyMTIz',
@@ -181,7 +181,7 @@ class AttendanceLogCall {
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'attendanceLog',
-      apiUrl: 'http://lonita.duckdns.org:8980/api/attendance_db/attendance/log',
+      apiUrl: 'http://192.168.0.13:8980/api/attendance_db/attendance/log',
       callType: ApiCallType.POST,
       headers: {
         'Authorization': 'Basic bG9naW5zeXM6Zm9vYmFyMTIz',
