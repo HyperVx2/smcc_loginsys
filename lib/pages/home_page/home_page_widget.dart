@@ -2,9 +2,15 @@ import '/backend/api_requests/api_calls.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/flutter_flow_widgets.dart';
+import '/flutter_flow/instant_timer.dart';
 import 'dart:async';
 import 'dart:ui';
 import '/custom_code/widgets/index.dart' as custom_widgets;
+import 'package:smooth_page_indicator/smooth_page_indicator.dart'
+    as smooth_page_indicator;
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -63,11 +69,42 @@ class _HomePageWidgetState extends State<HomePageWidget>
           safeSetState(() {});
         }
 
+        _model.resulltSiteNewsExt = await GetSiteNewsExtCall.call();
+
+        _model.resulltSiteNewsInt = await GetSiteNewsIntCall.call();
+
         FFAppState().startupDone = true;
         FFAppState().update(() {});
       } else {
         return;
       }
+
+      _model.instantTimer = InstantTimer.periodic(
+        duration: Duration(milliseconds: 15000),
+        callback: (timer) async {
+          if (_model.pageViewCurrentIndex > 2) {
+            unawaited(
+              () async {
+                await _model.pageViewController?.animateToPage(
+                  0,
+                  duration: Duration(milliseconds: 500),
+                  curve: Curves.ease,
+                );
+              }(),
+            );
+          } else {
+            unawaited(
+              () async {
+                await _model.pageViewController?.nextPage(
+                  duration: Duration(milliseconds: 300),
+                  curve: Curves.ease,
+                );
+              }(),
+            );
+          }
+        },
+        startImmediately: true,
+      );
     });
 
     _model.fieldUserRFIDTextController ??= TextEditingController();
@@ -136,13 +173,13 @@ class _HomePageWidgetState extends State<HomePageWidget>
                     ClipRect(
                       child: ImageFiltered(
                         imageFilter: ImageFilter.blur(
-                          sigmaX: 3.0,
-                          sigmaY: 3.0,
+                          sigmaX: 1.0,
+                          sigmaY: 1.0,
                         ),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(8.0),
                           child: Image.network(
-                            'https://picsum.photos/seed/251/600',
+                            'https://images.unsplash.com/photo-1720908675577-76d6a4113a56?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NTYyMDF8MHwxfHNlYXJjaHwzfHxtb3VudGFpbi1nMzBQMXpjT3pYb3xlbnwwfHx8fDE3NjQ0NjI4ODh8MA&ixlib=rb-4.1.0&q=80&w=1080',
                             width: MediaQuery.sizeOf(context).width * 1.0,
                             height: MediaQuery.sizeOf(context).height * 1.0,
                             fit: BoxFit.cover,
@@ -215,7 +252,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(8.0),
                             child: Image.network(
-                              'https://picsum.photos/seed/251/600',
+                              'https://images.unsplash.com/photo-1720908675577-76d6a4113a56?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NTYyMDF8MHwxfHNlYXJjaHwzfHxtb3VudGFpbi1nMzBQMXpjT3pYb3xlbnwwfHx8fDE3NjQ0NjI4ODh8MA&ixlib=rb-4.1.0&q=80&w=1080',
                               width: MediaQuery.sizeOf(context).width * 1.0,
                               height: MediaQuery.sizeOf(context).height * 1.0,
                               fit: BoxFit.cover,
@@ -302,34 +339,75 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                                             fit: BoxFit.contain,
                                                           ),
                                                         ),
-                                                        Text(
-                                                          'Hello, Welcome to SMCC!',
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .displaySmall
-                                                              .override(
-                                                                font: GoogleFonts
-                                                                    .interTight(
-                                                                  fontWeight: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .displaySmall
-                                                                      .fontWeight,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .displaySmall
-                                                                      .fontStyle,
-                                                                ),
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .displaySmall
-                                                                    .fontWeight,
-                                                                fontStyle: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .displaySmall
-                                                                    .fontStyle,
-                                                              ),
+                                                        Column(
+                                                          mainAxisSize:
+                                                              MainAxisSize.max,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              'Welcome to SMCC',
+                                                              style: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .displaySmall
+                                                                  .override(
+                                                                    font: GoogleFonts
+                                                                        .interTight(
+                                                                      fontWeight: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .displaySmall
+                                                                          .fontWeight,
+                                                                      fontStyle: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .displaySmall
+                                                                          .fontStyle,
+                                                                    ),
+                                                                    letterSpacing:
+                                                                        0.0,
+                                                                    fontWeight: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .displaySmall
+                                                                        .fontWeight,
+                                                                    fontStyle: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .displaySmall
+                                                                        .fontStyle,
+                                                                  ),
+                                                            ),
+                                                            Text(
+                                                              'Entrance Gate',
+                                                              style: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .labelLarge
+                                                                  .override(
+                                                                    font: GoogleFonts
+                                                                        .inter(
+                                                                      fontWeight: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .labelLarge
+                                                                          .fontWeight,
+                                                                      fontStyle: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .labelLarge
+                                                                          .fontStyle,
+                                                                    ),
+                                                                    letterSpacing:
+                                                                        0.0,
+                                                                    fontWeight: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .labelLarge
+                                                                        .fontWeight,
+                                                                    fontStyle: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .labelLarge
+                                                                        .fontStyle,
+                                                                  ),
+                                                            ),
+                                                          ],
                                                         ),
                                                       ].divide(SizedBox(
                                                           width: 16.0)),
@@ -840,28 +918,28 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                                               '${dateTimeFormat("yMMMd", getCurrentTimestamp)} ${dateTimeFormat("Hm", getCurrentTimestamp)}',
                                                               style: FlutterFlowTheme
                                                                       .of(context)
-                                                                  .headlineMedium
+                                                                  .headlineSmall
                                                                   .override(
                                                                     font: GoogleFonts
                                                                         .interTight(
                                                                       fontWeight: FlutterFlowTheme.of(
                                                                               context)
-                                                                          .headlineMedium
+                                                                          .headlineSmall
                                                                           .fontWeight,
                                                                       fontStyle: FlutterFlowTheme.of(
                                                                               context)
-                                                                          .headlineMedium
+                                                                          .headlineSmall
                                                                           .fontStyle,
                                                                     ),
                                                                     letterSpacing:
                                                                         0.0,
                                                                     fontWeight: FlutterFlowTheme.of(
                                                                             context)
-                                                                        .headlineMedium
+                                                                        .headlineSmall
                                                                         .fontWeight,
                                                                     fontStyle: FlutterFlowTheme.of(
                                                                             context)
-                                                                        .headlineMedium
+                                                                        .headlineSmall
                                                                         .fontStyle,
                                                                   ),
                                                             ),
@@ -871,7 +949,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                                               color: FlutterFlowTheme
                                                                       .of(context)
                                                                   .primaryText,
-                                                              size: 32.0,
+                                                              size: 24.0,
                                                             ),
                                                           ].divide(SizedBox(
                                                               width: 16.0)),
@@ -1289,6 +1367,40 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                                                   .fontStyle,
                                                         ),
                                                   ),
+                                                  Text(
+                                                    '${_model.displayOrgDescription} • ${_model.displayDepartment}',
+                                                    textAlign: TextAlign.center,
+                                                    style: FlutterFlowTheme.of(
+                                                            context)
+                                                        .labelLarge
+                                                        .override(
+                                                          font:
+                                                              GoogleFonts.inter(
+                                                            fontWeight:
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .labelLarge
+                                                                    .fontWeight,
+                                                            fontStyle:
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .labelLarge
+                                                                    .fontStyle,
+                                                          ),
+                                                          fontSize: 22.0,
+                                                          letterSpacing: 0.0,
+                                                          fontWeight:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .labelLarge
+                                                                  .fontWeight,
+                                                          fontStyle:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .labelLarge
+                                                                  .fontStyle,
+                                                        ),
+                                                  ),
                                                   Padding(
                                                     padding:
                                                         EdgeInsetsDirectional
@@ -1518,18 +1630,1567 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                           .secondaryBackground,
                                       borderRadius: BorderRadius.circular(24.0),
                                     ),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        FaIcon(
-                                          FontAwesomeIcons.globe,
-                                          color: FlutterFlowTheme.of(context)
-                                              .primaryText,
-                                          size: 254.0,
-                                        ),
-                                      ],
+                                    child: Builder(
+                                      builder: (context) {
+                                        if ((_model.resulltSiteNewsExt
+                                                ?.succeeded ??
+                                            true)) {
+                                          return Container(
+                                            width: double.infinity,
+                                            height: 500.0,
+                                            child: Stack(
+                                              children: [
+                                                PageView(
+                                                  controller: _model
+                                                          .pageViewController ??=
+                                                      PageController(
+                                                          initialPage: 0),
+                                                  scrollDirection:
+                                                      Axis.horizontal,
+                                                  children: [
+                                                    Padding(
+                                                      padding:
+                                                          EdgeInsets.all(10.0),
+                                                      child: Material(
+                                                        color:
+                                                            Colors.transparent,
+                                                        elevation: 5.0,
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      20.0),
+                                                        ),
+                                                        child: Container(
+                                                          width:
+                                                              double.infinity,
+                                                          height: 415.0,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .secondaryBackground,
+                                                            image:
+                                                                DecorationImage(
+                                                              fit: BoxFit.cover,
+                                                              image:
+                                                                  Image.network(
+                                                                valueOrDefault<
+                                                                    String>(
+                                                                  getJsonField(
+                                                                    (_model.resulltSiteNewsInt
+                                                                            ?.jsonBody ??
+                                                                        ''),
+                                                                    r'''$[1].jetpack_featured_media_url''',
+                                                                  )?.toString(),
+                                                                  'https://smcc.edu.ph/wp-content/uploads/2025/07/IMG_0011_800x533.jpg',
+                                                                ),
+                                                              ).image,
+                                                            ),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        20.0),
+                                                          ),
+                                                          child: Container(
+                                                            width:
+                                                                double.infinity,
+                                                            height:
+                                                                double.infinity,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              gradient:
+                                                                  LinearGradient(
+                                                                colors: [
+                                                                  Color(
+                                                                      0x4D000000),
+                                                                  Color(
+                                                                      0xCC1A84B8),
+                                                                  Color(
+                                                                      0xE61A84B8),
+                                                                  Color(
+                                                                      0xFF1A84B8)
+                                                                ],
+                                                                stops: [
+                                                                  0.4,
+                                                                  0.6,
+                                                                  0.7,
+                                                                  1.0
+                                                                ],
+                                                                begin:
+                                                                    AlignmentDirectional(
+                                                                        0.0,
+                                                                        -1.0),
+                                                                end:
+                                                                    AlignmentDirectional(
+                                                                        0, 1.0),
+                                                              ),
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          20.0),
+                                                            ),
+                                                            child: Padding(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(
+                                                                          20.0),
+                                                              child: Column(
+                                                                mainAxisSize:
+                                                                    MainAxisSize
+                                                                        .max,
+                                                                children: [
+                                                                  Align(
+                                                                    alignment:
+                                                                        AlignmentDirectional(
+                                                                            1.0,
+                                                                            -1.0),
+                                                                    child:
+                                                                        ClipRRect(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              24.0),
+                                                                      child:
+                                                                          BackdropFilter(
+                                                                        filter:
+                                                                            ImageFilter.blur(
+                                                                          sigmaX:
+                                                                              10.0,
+                                                                          sigmaY:
+                                                                              20.0,
+                                                                        ),
+                                                                        child:
+                                                                            FFButtonWidget(
+                                                                          onPressed:
+                                                                              () {
+                                                                            print('Button pressed ...');
+                                                                          },
+                                                                          text:
+                                                                              valueOrDefault<String>(
+                                                                            getJsonField(
+                                                                              (_model.resulltSiteNewsExt?.jsonBody ?? ''),
+                                                                              r'''$.items[1].categories''',
+                                                                            )?.toString(),
+                                                                            'News',
+                                                                          ),
+                                                                          icon:
+                                                                              Icon(
+                                                                            Icons.category,
+                                                                            size:
+                                                                                14.0,
+                                                                          ),
+                                                                          options:
+                                                                              FFButtonOptions(
+                                                                            height:
+                                                                                40.0,
+                                                                            padding: EdgeInsetsDirectional.fromSTEB(
+                                                                                10.0,
+                                                                                0.0,
+                                                                                10.0,
+                                                                                0.0),
+                                                                            iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                                                                0.0,
+                                                                                0.0,
+                                                                                0.0,
+                                                                                0.0),
+                                                                            color:
+                                                                                Color(0x36FFFFFF),
+                                                                            textStyle: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                  font: GoogleFonts.montserrat(
+                                                                                    fontWeight: FontWeight.normal,
+                                                                                    fontStyle: FlutterFlowTheme.of(context).titleSmall.fontStyle,
+                                                                                  ),
+                                                                                  color: Colors.white,
+                                                                                  letterSpacing: 0.0,
+                                                                                  fontWeight: FontWeight.normal,
+                                                                                  fontStyle: FlutterFlowTheme.of(context).titleSmall.fontStyle,
+                                                                                ),
+                                                                            elevation:
+                                                                                10.0,
+                                                                            borderSide:
+                                                                                BorderSide(
+                                                                              color: Color(0x4DFFFFFF),
+                                                                              width: 1.0,
+                                                                            ),
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(20.0),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  Flexible(
+                                                                    child: Row(
+                                                                      mainAxisSize:
+                                                                          MainAxisSize
+                                                                              .max,
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .spaceBetween,
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .end,
+                                                                      children: [
+                                                                        Align(
+                                                                          alignment: AlignmentDirectional(
+                                                                              -1.0,
+                                                                              1.0),
+                                                                          child:
+                                                                              Column(
+                                                                            mainAxisSize:
+                                                                                MainAxisSize.min,
+                                                                            mainAxisAlignment:
+                                                                                MainAxisAlignment.spaceEvenly,
+                                                                            crossAxisAlignment:
+                                                                                CrossAxisAlignment.start,
+                                                                            children:
+                                                                                [
+                                                                              Container(
+                                                                                width: MediaQuery.sizeOf(context).width * 0.5,
+                                                                                decoration: BoxDecoration(),
+                                                                                child: AutoSizeText(
+                                                                                  getJsonField(
+                                                                                    (_model.resulltSiteNewsExt?.jsonBody ?? ''),
+                                                                                    r'''$.items[1].title
+''',
+                                                                                  ).toString(),
+                                                                                  maxLines: 2,
+                                                                                  minFontSize: 14.0,
+                                                                                  style: FlutterFlowTheme.of(context).displayMedium.override(
+                                                                                        font: GoogleFonts.interTight(
+                                                                                          fontWeight: FlutterFlowTheme.of(context).displayMedium.fontWeight,
+                                                                                          fontStyle: FlutterFlowTheme.of(context).displayMedium.fontStyle,
+                                                                                        ),
+                                                                                        color: FlutterFlowTheme.of(context).info,
+                                                                                        letterSpacing: 0.0,
+                                                                                        fontWeight: FlutterFlowTheme.of(context).displayMedium.fontWeight,
+                                                                                        fontStyle: FlutterFlowTheme.of(context).displayMedium.fontStyle,
+                                                                                      ),
+                                                                                ),
+                                                                              ),
+                                                                              Row(
+                                                                                mainAxisSize: MainAxisSize.min,
+                                                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                                                children: [
+                                                                                  Icon(
+                                                                                    Icons.person,
+                                                                                    color: Color(0xCCFFFFFF),
+                                                                                    size: 22.0,
+                                                                                  ),
+                                                                                  Text(
+                                                                                    getJsonField(
+                                                                                      (_model.resulltSiteNewsExt?.jsonBody ?? ''),
+                                                                                      r'''$.items[1].author
+''',
+                                                                                    ).toString(),
+                                                                                    maxLines: 1,
+                                                                                    style: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                          font: GoogleFonts.montserrat(
+                                                                                            fontWeight: FontWeight.w200,
+                                                                                            fontStyle: FlutterFlowTheme.of(context).titleSmall.fontStyle,
+                                                                                          ),
+                                                                                          color: FlutterFlowTheme.of(context).info,
+                                                                                          letterSpacing: 0.0,
+                                                                                          fontWeight: FontWeight.w200,
+                                                                                          fontStyle: FlutterFlowTheme.of(context).titleSmall.fontStyle,
+                                                                                        ),
+                                                                                    overflow: TextOverflow.fade,
+                                                                                  ),
+                                                                                  Icon(
+                                                                                    Icons.date_range,
+                                                                                    color: Color(0xCCFFFFFF),
+                                                                                    size: 22.0,
+                                                                                  ),
+                                                                                  Text(
+                                                                                    getJsonField(
+                                                                                      (_model.resulltSiteNewsExt?.jsonBody ?? ''),
+                                                                                      r'''$.items[1].pubDate
+''',
+                                                                                    ).toString(),
+                                                                                    maxLines: 1,
+                                                                                    style: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                          font: GoogleFonts.montserrat(
+                                                                                            fontWeight: FontWeight.w200,
+                                                                                            fontStyle: FlutterFlowTheme.of(context).titleSmall.fontStyle,
+                                                                                          ),
+                                                                                          color: FlutterFlowTheme.of(context).info,
+                                                                                          letterSpacing: 0.0,
+                                                                                          fontWeight: FontWeight.w200,
+                                                                                          fontStyle: FlutterFlowTheme.of(context).titleSmall.fontStyle,
+                                                                                        ),
+                                                                                    overflow: TextOverflow.visible,
+                                                                                  ),
+                                                                                ].divide(SizedBox(width: 8.0)),
+                                                                              ),
+                                                                              Container(
+                                                                                width: MediaQuery.sizeOf(context).width * 0.5,
+                                                                                decoration: BoxDecoration(),
+                                                                                child: Align(
+                                                                                  alignment: AlignmentDirectional(0.0, 0.0),
+                                                                                  child: AutoSizeText(
+                                                                                    getJsonField(
+                                                                                      (_model.resulltSiteNewsExt?.jsonBody ?? ''),
+                                                                                      r'''$.items[1].description
+''',
+                                                                                    ).toString(),
+                                                                                    textAlign: TextAlign.start,
+                                                                                    maxLines: 3,
+                                                                                    minFontSize: 20.0,
+                                                                                    style: FlutterFlowTheme.of(context).headlineSmall.override(
+                                                                                          font: GoogleFonts.interTight(
+                                                                                            fontWeight: FontWeight.normal,
+                                                                                            fontStyle: FlutterFlowTheme.of(context).headlineSmall.fontStyle,
+                                                                                          ),
+                                                                                          color: Color(0xFFE0E3E7),
+                                                                                          fontSize: 20.0,
+                                                                                          letterSpacing: 3.0,
+                                                                                          fontWeight: FontWeight.normal,
+                                                                                          fontStyle: FlutterFlowTheme.of(context).headlineSmall.fontStyle,
+                                                                                        ),
+                                                                                    overflow: TextOverflow.ellipsis,
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ].divide(SizedBox(height: 10.0)).around(SizedBox(height: 10.0)),
+                                                                          ),
+                                                                        ),
+                                                                        Align(
+                                                                          alignment: AlignmentDirectional(
+                                                                              1.0,
+                                                                              1.0),
+                                                                          child:
+                                                                              Material(
+                                                                            color:
+                                                                                Colors.transparent,
+                                                                            elevation:
+                                                                                10.0,
+                                                                            shape:
+                                                                                RoundedRectangleBorder(
+                                                                              borderRadius: BorderRadius.circular(20.0),
+                                                                            ),
+                                                                            child:
+                                                                                Container(
+                                                                              width: 150.0,
+                                                                              height: 150.0,
+                                                                              decoration: BoxDecoration(
+                                                                                color: Color(0xCCFFFFFF),
+                                                                                borderRadius: BorderRadius.circular(20.0),
+                                                                                border: Border.all(
+                                                                                  color: Color(0x4DFFFFFF),
+                                                                                  width: 1.0,
+                                                                                ),
+                                                                              ),
+                                                                              child: Padding(
+                                                                                padding: EdgeInsets.all(10.0),
+                                                                                child: BarcodeWidget(
+                                                                                  data: valueOrDefault<String>(
+                                                                                    getJsonField(
+                                                                                      (_model.resulltSiteNewsExt?.jsonBody ?? ''),
+                                                                                      r'''$.items[1].guid''',
+                                                                                    )?.toString(),
+                                                                                    'https://smcc.edu.ph/',
+                                                                                  ),
+                                                                                  barcode: Barcode.qrCode(),
+                                                                                  width: 100.0,
+                                                                                  height: 100.0,
+                                                                                  color: Color(0xFF14181B),
+                                                                                  backgroundColor: Colors.transparent,
+                                                                                  errorBuilder: (_context, _error) => SizedBox(
+                                                                                    width: 100.0,
+                                                                                    height: 100.0,
+                                                                                  ),
+                                                                                  drawText: true,
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          EdgeInsets.all(10.0),
+                                                      child: Material(
+                                                        color:
+                                                            Colors.transparent,
+                                                        elevation: 5.0,
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      20.0),
+                                                        ),
+                                                        child: Container(
+                                                          width:
+                                                              double.infinity,
+                                                          height: 415.0,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .secondaryBackground,
+                                                            image:
+                                                                DecorationImage(
+                                                              fit: BoxFit.cover,
+                                                              image:
+                                                                  Image.network(
+                                                                valueOrDefault<
+                                                                    String>(
+                                                                  getJsonField(
+                                                                    (_model.resulltSiteNewsInt
+                                                                            ?.jsonBody ??
+                                                                        ''),
+                                                                    r'''$[2].jetpack_featured_media_url''',
+                                                                  )?.toString(),
+                                                                  'https://smcc.edu.ph/wp-content/uploads/2025/07/IMG_0011_800x533.jpg',
+                                                                ),
+                                                              ).image,
+                                                            ),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        20.0),
+                                                          ),
+                                                          child: Container(
+                                                            width:
+                                                                double.infinity,
+                                                            height:
+                                                                double.infinity,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              gradient:
+                                                                  LinearGradient(
+                                                                colors: [
+                                                                  Color(
+                                                                      0x4D000000),
+                                                                  Color(
+                                                                      0xCC1A84B8),
+                                                                  Color(
+                                                                      0xE61A84B8),
+                                                                  Color(
+                                                                      0xFF1A84B8)
+                                                                ],
+                                                                stops: [
+                                                                  0.4,
+                                                                  0.6,
+                                                                  0.7,
+                                                                  1.0
+                                                                ],
+                                                                begin:
+                                                                    AlignmentDirectional(
+                                                                        0.0,
+                                                                        -1.0),
+                                                                end:
+                                                                    AlignmentDirectional(
+                                                                        0, 1.0),
+                                                              ),
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          20.0),
+                                                            ),
+                                                            child: Padding(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(
+                                                                          20.0),
+                                                              child: Column(
+                                                                mainAxisSize:
+                                                                    MainAxisSize
+                                                                        .max,
+                                                                children: [
+                                                                  Align(
+                                                                    alignment:
+                                                                        AlignmentDirectional(
+                                                                            1.0,
+                                                                            -1.0),
+                                                                    child:
+                                                                        ClipRRect(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              24.0),
+                                                                      child:
+                                                                          BackdropFilter(
+                                                                        filter:
+                                                                            ImageFilter.blur(
+                                                                          sigmaX:
+                                                                              10.0,
+                                                                          sigmaY:
+                                                                              20.0,
+                                                                        ),
+                                                                        child:
+                                                                            FFButtonWidget(
+                                                                          onPressed:
+                                                                              () {
+                                                                            print('Button pressed ...');
+                                                                          },
+                                                                          text:
+                                                                              valueOrDefault<String>(
+                                                                            getJsonField(
+                                                                              (_model.resulltSiteNewsExt?.jsonBody ?? ''),
+                                                                              r'''$.items[2].categories''',
+                                                                            )?.toString(),
+                                                                            'News',
+                                                                          ),
+                                                                          icon:
+                                                                              Icon(
+                                                                            Icons.category,
+                                                                            size:
+                                                                                14.0,
+                                                                          ),
+                                                                          options:
+                                                                              FFButtonOptions(
+                                                                            height:
+                                                                                40.0,
+                                                                            padding: EdgeInsetsDirectional.fromSTEB(
+                                                                                10.0,
+                                                                                0.0,
+                                                                                10.0,
+                                                                                0.0),
+                                                                            iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                                                                0.0,
+                                                                                0.0,
+                                                                                0.0,
+                                                                                0.0),
+                                                                            color:
+                                                                                Color(0x36FFFFFF),
+                                                                            textStyle: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                  font: GoogleFonts.montserrat(
+                                                                                    fontWeight: FontWeight.normal,
+                                                                                    fontStyle: FlutterFlowTheme.of(context).titleSmall.fontStyle,
+                                                                                  ),
+                                                                                  color: Colors.white,
+                                                                                  letterSpacing: 0.0,
+                                                                                  fontWeight: FontWeight.normal,
+                                                                                  fontStyle: FlutterFlowTheme.of(context).titleSmall.fontStyle,
+                                                                                ),
+                                                                            elevation:
+                                                                                10.0,
+                                                                            borderSide:
+                                                                                BorderSide(
+                                                                              color: Color(0x4DFFFFFF),
+                                                                              width: 1.0,
+                                                                            ),
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(20.0),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  Flexible(
+                                                                    child: Row(
+                                                                      mainAxisSize:
+                                                                          MainAxisSize
+                                                                              .max,
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .spaceBetween,
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .end,
+                                                                      children: [
+                                                                        Align(
+                                                                          alignment: AlignmentDirectional(
+                                                                              -1.0,
+                                                                              1.0),
+                                                                          child:
+                                                                              Column(
+                                                                            mainAxisSize:
+                                                                                MainAxisSize.min,
+                                                                            mainAxisAlignment:
+                                                                                MainAxisAlignment.spaceEvenly,
+                                                                            crossAxisAlignment:
+                                                                                CrossAxisAlignment.start,
+                                                                            children:
+                                                                                [
+                                                                              Container(
+                                                                                width: MediaQuery.sizeOf(context).width * 0.5,
+                                                                                decoration: BoxDecoration(),
+                                                                                child: AutoSizeText(
+                                                                                  getJsonField(
+                                                                                    (_model.resulltSiteNewsExt?.jsonBody ?? ''),
+                                                                                    r'''$.items[2].title
+''',
+                                                                                  ).toString(),
+                                                                                  maxLines: 2,
+                                                                                  minFontSize: 14.0,
+                                                                                  style: FlutterFlowTheme.of(context).displayMedium.override(
+                                                                                        font: GoogleFonts.interTight(
+                                                                                          fontWeight: FlutterFlowTheme.of(context).displayMedium.fontWeight,
+                                                                                          fontStyle: FlutterFlowTheme.of(context).displayMedium.fontStyle,
+                                                                                        ),
+                                                                                        color: FlutterFlowTheme.of(context).info,
+                                                                                        letterSpacing: 0.0,
+                                                                                        fontWeight: FlutterFlowTheme.of(context).displayMedium.fontWeight,
+                                                                                        fontStyle: FlutterFlowTheme.of(context).displayMedium.fontStyle,
+                                                                                      ),
+                                                                                ),
+                                                                              ),
+                                                                              Row(
+                                                                                mainAxisSize: MainAxisSize.min,
+                                                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                                                children: [
+                                                                                  Icon(
+                                                                                    Icons.person,
+                                                                                    color: Color(0xCCFFFFFF),
+                                                                                    size: 22.0,
+                                                                                  ),
+                                                                                  Text(
+                                                                                    getJsonField(
+                                                                                      (_model.resulltSiteNewsExt?.jsonBody ?? ''),
+                                                                                      r'''$.items[2].author
+''',
+                                                                                    ).toString(),
+                                                                                    maxLines: 1,
+                                                                                    style: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                          font: GoogleFonts.montserrat(
+                                                                                            fontWeight: FontWeight.w200,
+                                                                                            fontStyle: FlutterFlowTheme.of(context).titleSmall.fontStyle,
+                                                                                          ),
+                                                                                          color: FlutterFlowTheme.of(context).info,
+                                                                                          letterSpacing: 0.0,
+                                                                                          fontWeight: FontWeight.w200,
+                                                                                          fontStyle: FlutterFlowTheme.of(context).titleSmall.fontStyle,
+                                                                                        ),
+                                                                                    overflow: TextOverflow.fade,
+                                                                                  ),
+                                                                                  Icon(
+                                                                                    Icons.date_range,
+                                                                                    color: Color(0xCCFFFFFF),
+                                                                                    size: 22.0,
+                                                                                  ),
+                                                                                  Text(
+                                                                                    getJsonField(
+                                                                                      (_model.resulltSiteNewsExt?.jsonBody ?? ''),
+                                                                                      r'''$.items[2].pubDate
+''',
+                                                                                    ).toString(),
+                                                                                    maxLines: 1,
+                                                                                    style: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                          font: GoogleFonts.montserrat(
+                                                                                            fontWeight: FontWeight.w200,
+                                                                                            fontStyle: FlutterFlowTheme.of(context).titleSmall.fontStyle,
+                                                                                          ),
+                                                                                          color: FlutterFlowTheme.of(context).info,
+                                                                                          letterSpacing: 0.0,
+                                                                                          fontWeight: FontWeight.w200,
+                                                                                          fontStyle: FlutterFlowTheme.of(context).titleSmall.fontStyle,
+                                                                                        ),
+                                                                                    overflow: TextOverflow.visible,
+                                                                                  ),
+                                                                                ].divide(SizedBox(width: 8.0)),
+                                                                              ),
+                                                                              Container(
+                                                                                width: MediaQuery.sizeOf(context).width * 0.5,
+                                                                                decoration: BoxDecoration(),
+                                                                                child: Align(
+                                                                                  alignment: AlignmentDirectional(0.0, 0.0),
+                                                                                  child: AutoSizeText(
+                                                                                    getJsonField(
+                                                                                      (_model.resulltSiteNewsExt?.jsonBody ?? ''),
+                                                                                      r'''$.items[2].description
+''',
+                                                                                    ).toString(),
+                                                                                    textAlign: TextAlign.start,
+                                                                                    maxLines: 3,
+                                                                                    minFontSize: 20.0,
+                                                                                    style: FlutterFlowTheme.of(context).headlineSmall.override(
+                                                                                          font: GoogleFonts.interTight(
+                                                                                            fontWeight: FontWeight.normal,
+                                                                                            fontStyle: FlutterFlowTheme.of(context).headlineSmall.fontStyle,
+                                                                                          ),
+                                                                                          color: Color(0xFFE0E3E7),
+                                                                                          fontSize: 20.0,
+                                                                                          letterSpacing: 3.0,
+                                                                                          fontWeight: FontWeight.normal,
+                                                                                          fontStyle: FlutterFlowTheme.of(context).headlineSmall.fontStyle,
+                                                                                        ),
+                                                                                    overflow: TextOverflow.ellipsis,
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ].divide(SizedBox(height: 10.0)).around(SizedBox(height: 10.0)),
+                                                                          ),
+                                                                        ),
+                                                                        Align(
+                                                                          alignment: AlignmentDirectional(
+                                                                              1.0,
+                                                                              1.0),
+                                                                          child:
+                                                                              Material(
+                                                                            color:
+                                                                                Colors.transparent,
+                                                                            elevation:
+                                                                                10.0,
+                                                                            shape:
+                                                                                RoundedRectangleBorder(
+                                                                              borderRadius: BorderRadius.circular(20.0),
+                                                                            ),
+                                                                            child:
+                                                                                Container(
+                                                                              width: 150.0,
+                                                                              height: 150.0,
+                                                                              decoration: BoxDecoration(
+                                                                                color: Color(0xCCFFFFFF),
+                                                                                borderRadius: BorderRadius.circular(20.0),
+                                                                                border: Border.all(
+                                                                                  color: Color(0x4DFFFFFF),
+                                                                                  width: 1.0,
+                                                                                ),
+                                                                              ),
+                                                                              child: Padding(
+                                                                                padding: EdgeInsets.all(10.0),
+                                                                                child: BarcodeWidget(
+                                                                                  data: valueOrDefault<String>(
+                                                                                    getJsonField(
+                                                                                      (_model.resulltSiteNewsExt?.jsonBody ?? ''),
+                                                                                      r'''$.items[2].guid''',
+                                                                                    )?.toString(),
+                                                                                    'https://smcc.edu.ph/',
+                                                                                  ),
+                                                                                  barcode: Barcode.qrCode(),
+                                                                                  width: 100.0,
+                                                                                  height: 100.0,
+                                                                                  color: Color(0xFF14181B),
+                                                                                  backgroundColor: Colors.transparent,
+                                                                                  errorBuilder: (_context, _error) => SizedBox(
+                                                                                    width: 100.0,
+                                                                                    height: 100.0,
+                                                                                  ),
+                                                                                  drawText: true,
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          EdgeInsets.all(10.0),
+                                                      child: Material(
+                                                        color:
+                                                            Colors.transparent,
+                                                        elevation: 5.0,
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      20.0),
+                                                        ),
+                                                        child: Container(
+                                                          width:
+                                                              double.infinity,
+                                                          height: 415.0,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .secondaryBackground,
+                                                            image:
+                                                                DecorationImage(
+                                                              fit: BoxFit.cover,
+                                                              image:
+                                                                  Image.network(
+                                                                valueOrDefault<
+                                                                    String>(
+                                                                  getJsonField(
+                                                                    (_model.resulltSiteNewsInt
+                                                                            ?.jsonBody ??
+                                                                        ''),
+                                                                    r'''$[3].jetpack_featured_media_url''',
+                                                                  )?.toString(),
+                                                                  'https://smcc.edu.ph/wp-content/uploads/2025/07/IMG_0011_800x533.jpg',
+                                                                ),
+                                                              ).image,
+                                                            ),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        20.0),
+                                                          ),
+                                                          child: Container(
+                                                            width:
+                                                                double.infinity,
+                                                            height:
+                                                                double.infinity,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              gradient:
+                                                                  LinearGradient(
+                                                                colors: [
+                                                                  Color(
+                                                                      0x4D000000),
+                                                                  Color(
+                                                                      0xCC1A84B8),
+                                                                  Color(
+                                                                      0xE61A84B8),
+                                                                  Color(
+                                                                      0xFF1A84B8)
+                                                                ],
+                                                                stops: [
+                                                                  0.4,
+                                                                  0.6,
+                                                                  0.7,
+                                                                  1.0
+                                                                ],
+                                                                begin:
+                                                                    AlignmentDirectional(
+                                                                        0.0,
+                                                                        -1.0),
+                                                                end:
+                                                                    AlignmentDirectional(
+                                                                        0, 1.0),
+                                                              ),
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          20.0),
+                                                            ),
+                                                            child: Padding(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(
+                                                                          20.0),
+                                                              child: Column(
+                                                                mainAxisSize:
+                                                                    MainAxisSize
+                                                                        .max,
+                                                                children: [
+                                                                  Align(
+                                                                    alignment:
+                                                                        AlignmentDirectional(
+                                                                            1.0,
+                                                                            -1.0),
+                                                                    child:
+                                                                        ClipRRect(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              24.0),
+                                                                      child:
+                                                                          BackdropFilter(
+                                                                        filter:
+                                                                            ImageFilter.blur(
+                                                                          sigmaX:
+                                                                              10.0,
+                                                                          sigmaY:
+                                                                              20.0,
+                                                                        ),
+                                                                        child:
+                                                                            FFButtonWidget(
+                                                                          onPressed:
+                                                                              () {
+                                                                            print('Button pressed ...');
+                                                                          },
+                                                                          text:
+                                                                              valueOrDefault<String>(
+                                                                            getJsonField(
+                                                                              (_model.resulltSiteNewsExt?.jsonBody ?? ''),
+                                                                              r'''$.items[3].categories''',
+                                                                            )?.toString(),
+                                                                            'News',
+                                                                          ),
+                                                                          icon:
+                                                                              Icon(
+                                                                            Icons.category,
+                                                                            size:
+                                                                                14.0,
+                                                                          ),
+                                                                          options:
+                                                                              FFButtonOptions(
+                                                                            height:
+                                                                                40.0,
+                                                                            padding: EdgeInsetsDirectional.fromSTEB(
+                                                                                10.0,
+                                                                                0.0,
+                                                                                10.0,
+                                                                                0.0),
+                                                                            iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                                                                0.0,
+                                                                                0.0,
+                                                                                0.0,
+                                                                                0.0),
+                                                                            color:
+                                                                                Color(0x36FFFFFF),
+                                                                            textStyle: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                  font: GoogleFonts.montserrat(
+                                                                                    fontWeight: FontWeight.normal,
+                                                                                    fontStyle: FlutterFlowTheme.of(context).titleSmall.fontStyle,
+                                                                                  ),
+                                                                                  color: Colors.white,
+                                                                                  letterSpacing: 0.0,
+                                                                                  fontWeight: FontWeight.normal,
+                                                                                  fontStyle: FlutterFlowTheme.of(context).titleSmall.fontStyle,
+                                                                                ),
+                                                                            elevation:
+                                                                                10.0,
+                                                                            borderSide:
+                                                                                BorderSide(
+                                                                              color: Color(0x4DFFFFFF),
+                                                                              width: 1.0,
+                                                                            ),
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(20.0),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  Flexible(
+                                                                    child: Row(
+                                                                      mainAxisSize:
+                                                                          MainAxisSize
+                                                                              .max,
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .spaceBetween,
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .end,
+                                                                      children: [
+                                                                        Align(
+                                                                          alignment: AlignmentDirectional(
+                                                                              -1.0,
+                                                                              1.0),
+                                                                          child:
+                                                                              Column(
+                                                                            mainAxisSize:
+                                                                                MainAxisSize.min,
+                                                                            mainAxisAlignment:
+                                                                                MainAxisAlignment.spaceEvenly,
+                                                                            crossAxisAlignment:
+                                                                                CrossAxisAlignment.start,
+                                                                            children:
+                                                                                [
+                                                                              Container(
+                                                                                width: MediaQuery.sizeOf(context).width * 0.5,
+                                                                                decoration: BoxDecoration(),
+                                                                                child: AutoSizeText(
+                                                                                  getJsonField(
+                                                                                    (_model.resulltSiteNewsExt?.jsonBody ?? ''),
+                                                                                    r'''$.items[3].title
+''',
+                                                                                  ).toString(),
+                                                                                  maxLines: 2,
+                                                                                  minFontSize: 14.0,
+                                                                                  style: FlutterFlowTheme.of(context).displayMedium.override(
+                                                                                        font: GoogleFonts.interTight(
+                                                                                          fontWeight: FlutterFlowTheme.of(context).displayMedium.fontWeight,
+                                                                                          fontStyle: FlutterFlowTheme.of(context).displayMedium.fontStyle,
+                                                                                        ),
+                                                                                        color: FlutterFlowTheme.of(context).info,
+                                                                                        letterSpacing: 0.0,
+                                                                                        fontWeight: FlutterFlowTheme.of(context).displayMedium.fontWeight,
+                                                                                        fontStyle: FlutterFlowTheme.of(context).displayMedium.fontStyle,
+                                                                                      ),
+                                                                                ),
+                                                                              ),
+                                                                              Row(
+                                                                                mainAxisSize: MainAxisSize.min,
+                                                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                                                children: [
+                                                                                  Icon(
+                                                                                    Icons.person,
+                                                                                    color: Color(0xCCFFFFFF),
+                                                                                    size: 22.0,
+                                                                                  ),
+                                                                                  Text(
+                                                                                    getJsonField(
+                                                                                      (_model.resulltSiteNewsExt?.jsonBody ?? ''),
+                                                                                      r'''$.items[3].author
+''',
+                                                                                    ).toString(),
+                                                                                    maxLines: 1,
+                                                                                    style: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                          font: GoogleFonts.montserrat(
+                                                                                            fontWeight: FontWeight.w200,
+                                                                                            fontStyle: FlutterFlowTheme.of(context).titleSmall.fontStyle,
+                                                                                          ),
+                                                                                          color: FlutterFlowTheme.of(context).info,
+                                                                                          letterSpacing: 0.0,
+                                                                                          fontWeight: FontWeight.w200,
+                                                                                          fontStyle: FlutterFlowTheme.of(context).titleSmall.fontStyle,
+                                                                                        ),
+                                                                                    overflow: TextOverflow.fade,
+                                                                                  ),
+                                                                                  Icon(
+                                                                                    Icons.date_range,
+                                                                                    color: Color(0xCCFFFFFF),
+                                                                                    size: 22.0,
+                                                                                  ),
+                                                                                  Text(
+                                                                                    getJsonField(
+                                                                                      (_model.resulltSiteNewsExt?.jsonBody ?? ''),
+                                                                                      r'''$.items[3].pubDate
+''',
+                                                                                    ).toString(),
+                                                                                    maxLines: 1,
+                                                                                    style: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                          font: GoogleFonts.montserrat(
+                                                                                            fontWeight: FontWeight.w200,
+                                                                                            fontStyle: FlutterFlowTheme.of(context).titleSmall.fontStyle,
+                                                                                          ),
+                                                                                          color: FlutterFlowTheme.of(context).info,
+                                                                                          letterSpacing: 0.0,
+                                                                                          fontWeight: FontWeight.w200,
+                                                                                          fontStyle: FlutterFlowTheme.of(context).titleSmall.fontStyle,
+                                                                                        ),
+                                                                                    overflow: TextOverflow.visible,
+                                                                                  ),
+                                                                                ].divide(SizedBox(width: 8.0)),
+                                                                              ),
+                                                                              Container(
+                                                                                width: MediaQuery.sizeOf(context).width * 0.5,
+                                                                                decoration: BoxDecoration(),
+                                                                                child: Align(
+                                                                                  alignment: AlignmentDirectional(0.0, 0.0),
+                                                                                  child: AutoSizeText(
+                                                                                    getJsonField(
+                                                                                      (_model.resulltSiteNewsExt?.jsonBody ?? ''),
+                                                                                      r'''$.items[3].description
+''',
+                                                                                    ).toString(),
+                                                                                    textAlign: TextAlign.start,
+                                                                                    maxLines: 3,
+                                                                                    minFontSize: 20.0,
+                                                                                    style: FlutterFlowTheme.of(context).headlineSmall.override(
+                                                                                          font: GoogleFonts.interTight(
+                                                                                            fontWeight: FontWeight.normal,
+                                                                                            fontStyle: FlutterFlowTheme.of(context).headlineSmall.fontStyle,
+                                                                                          ),
+                                                                                          color: Color(0xFFE0E3E7),
+                                                                                          fontSize: 20.0,
+                                                                                          letterSpacing: 3.0,
+                                                                                          fontWeight: FontWeight.normal,
+                                                                                          fontStyle: FlutterFlowTheme.of(context).headlineSmall.fontStyle,
+                                                                                        ),
+                                                                                    overflow: TextOverflow.ellipsis,
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ].divide(SizedBox(height: 10.0)).around(SizedBox(height: 10.0)),
+                                                                          ),
+                                                                        ),
+                                                                        Align(
+                                                                          alignment: AlignmentDirectional(
+                                                                              1.0,
+                                                                              1.0),
+                                                                          child:
+                                                                              Material(
+                                                                            color:
+                                                                                Colors.transparent,
+                                                                            elevation:
+                                                                                10.0,
+                                                                            shape:
+                                                                                RoundedRectangleBorder(
+                                                                              borderRadius: BorderRadius.circular(20.0),
+                                                                            ),
+                                                                            child:
+                                                                                Container(
+                                                                              width: 150.0,
+                                                                              height: 150.0,
+                                                                              decoration: BoxDecoration(
+                                                                                color: Color(0xCCFFFFFF),
+                                                                                borderRadius: BorderRadius.circular(20.0),
+                                                                                border: Border.all(
+                                                                                  color: Color(0x4DFFFFFF),
+                                                                                  width: 1.0,
+                                                                                ),
+                                                                              ),
+                                                                              child: Padding(
+                                                                                padding: EdgeInsets.all(10.0),
+                                                                                child: BarcodeWidget(
+                                                                                  data: valueOrDefault<String>(
+                                                                                    getJsonField(
+                                                                                      (_model.resulltSiteNewsExt?.jsonBody ?? ''),
+                                                                                      r'''$.items[3].guid''',
+                                                                                    )?.toString(),
+                                                                                    'https://smcc.edu.ph/',
+                                                                                  ),
+                                                                                  barcode: Barcode.qrCode(),
+                                                                                  width: 100.0,
+                                                                                  height: 100.0,
+                                                                                  color: Color(0xFF14181B),
+                                                                                  backgroundColor: Colors.transparent,
+                                                                                  errorBuilder: (_context, _error) => SizedBox(
+                                                                                    width: 100.0,
+                                                                                    height: 100.0,
+                                                                                  ),
+                                                                                  drawText: true,
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          EdgeInsets.all(10.0),
+                                                      child: Material(
+                                                        color:
+                                                            Colors.transparent,
+                                                        elevation: 5.0,
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      20.0),
+                                                        ),
+                                                        child: Container(
+                                                          width:
+                                                              MediaQuery.sizeOf(
+                                                                          context)
+                                                                      .width *
+                                                                  1.0,
+                                                          height:
+                                                              MediaQuery.sizeOf(
+                                                                          context)
+                                                                      .height *
+                                                                  1.0,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .secondaryBackground,
+                                                            image:
+                                                                DecorationImage(
+                                                              fit: BoxFit.cover,
+                                                              image:
+                                                                  Image.network(
+                                                                valueOrDefault<
+                                                                    String>(
+                                                                  getJsonField(
+                                                                    (_model.resulltSiteNewsInt
+                                                                            ?.jsonBody ??
+                                                                        ''),
+                                                                    r'''$[0].jetpack_featured_media_url''',
+                                                                  )?.toString(),
+                                                                  'https://smcc.edu.ph/wp-content/uploads/2025/07/IMG_0011_800x533.jpg',
+                                                                ),
+                                                              ).image,
+                                                            ),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        20.0),
+                                                          ),
+                                                          child: Container(
+                                                            width:
+                                                                double.infinity,
+                                                            height:
+                                                                double.infinity,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              gradient:
+                                                                  LinearGradient(
+                                                                colors: [
+                                                                  Color(
+                                                                      0x4D000000),
+                                                                  Color(
+                                                                      0xCC1A84B8),
+                                                                  Color(
+                                                                      0xE61A84B8),
+                                                                  Color(
+                                                                      0xFF1A84B8)
+                                                                ],
+                                                                stops: [
+                                                                  0.4,
+                                                                  0.6,
+                                                                  0.7,
+                                                                  1.0
+                                                                ],
+                                                                begin:
+                                                                    AlignmentDirectional(
+                                                                        0.0,
+                                                                        -1.0),
+                                                                end:
+                                                                    AlignmentDirectional(
+                                                                        0, 1.0),
+                                                              ),
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          20.0),
+                                                            ),
+                                                            child: Padding(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(
+                                                                          20.0),
+                                                              child: Column(
+                                                                mainAxisSize:
+                                                                    MainAxisSize
+                                                                        .max,
+                                                                children: [
+                                                                  Align(
+                                                                    alignment:
+                                                                        AlignmentDirectional(
+                                                                            1.0,
+                                                                            -1.0),
+                                                                    child:
+                                                                        ClipRRect(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              24.0),
+                                                                      child:
+                                                                          BackdropFilter(
+                                                                        filter:
+                                                                            ImageFilter.blur(
+                                                                          sigmaX:
+                                                                              10.0,
+                                                                          sigmaY:
+                                                                              20.0,
+                                                                        ),
+                                                                        child:
+                                                                            FFButtonWidget(
+                                                                          onPressed:
+                                                                              () {
+                                                                            print('Button pressed ...');
+                                                                          },
+                                                                          text:
+                                                                              valueOrDefault<String>(
+                                                                            getJsonField(
+                                                                              (_model.resulltSiteNewsExt?.jsonBody ?? ''),
+                                                                              r'''$.items[0].categories''',
+                                                                            )?.toString(),
+                                                                            'News',
+                                                                          ),
+                                                                          icon:
+                                                                              Icon(
+                                                                            Icons.category,
+                                                                            size:
+                                                                                14.0,
+                                                                          ),
+                                                                          options:
+                                                                              FFButtonOptions(
+                                                                            height:
+                                                                                40.0,
+                                                                            padding: EdgeInsetsDirectional.fromSTEB(
+                                                                                10.0,
+                                                                                0.0,
+                                                                                10.0,
+                                                                                0.0),
+                                                                            iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                                                                0.0,
+                                                                                0.0,
+                                                                                0.0,
+                                                                                0.0),
+                                                                            color:
+                                                                                Color(0x36FFFFFF),
+                                                                            textStyle: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                  font: GoogleFonts.montserrat(
+                                                                                    fontWeight: FontWeight.normal,
+                                                                                    fontStyle: FlutterFlowTheme.of(context).titleSmall.fontStyle,
+                                                                                  ),
+                                                                                  color: Colors.white,
+                                                                                  letterSpacing: 0.0,
+                                                                                  fontWeight: FontWeight.normal,
+                                                                                  fontStyle: FlutterFlowTheme.of(context).titleSmall.fontStyle,
+                                                                                ),
+                                                                            elevation:
+                                                                                10.0,
+                                                                            borderSide:
+                                                                                BorderSide(
+                                                                              color: Color(0x4DFFFFFF),
+                                                                              width: 1.0,
+                                                                            ),
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(20.0),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  Flexible(
+                                                                    child: Row(
+                                                                      mainAxisSize:
+                                                                          MainAxisSize
+                                                                              .max,
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .spaceBetween,
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .end,
+                                                                      children: [
+                                                                        Align(
+                                                                          alignment: AlignmentDirectional(
+                                                                              -1.0,
+                                                                              1.0),
+                                                                          child:
+                                                                              Column(
+                                                                            mainAxisSize:
+                                                                                MainAxisSize.min,
+                                                                            mainAxisAlignment:
+                                                                                MainAxisAlignment.spaceEvenly,
+                                                                            crossAxisAlignment:
+                                                                                CrossAxisAlignment.start,
+                                                                            children:
+                                                                                [
+                                                                              Container(
+                                                                                width: MediaQuery.sizeOf(context).width * 0.5,
+                                                                                decoration: BoxDecoration(),
+                                                                                child: AutoSizeText(
+                                                                                  getJsonField(
+                                                                                    (_model.resulltSiteNewsExt?.jsonBody ?? ''),
+                                                                                    r'''$.items[0].title
+''',
+                                                                                  ).toString(),
+                                                                                  maxLines: 2,
+                                                                                  minFontSize: 14.0,
+                                                                                  style: FlutterFlowTheme.of(context).displayMedium.override(
+                                                                                        font: GoogleFonts.interTight(
+                                                                                          fontWeight: FlutterFlowTheme.of(context).displayMedium.fontWeight,
+                                                                                          fontStyle: FlutterFlowTheme.of(context).displayMedium.fontStyle,
+                                                                                        ),
+                                                                                        color: FlutterFlowTheme.of(context).info,
+                                                                                        letterSpacing: 0.0,
+                                                                                        fontWeight: FlutterFlowTheme.of(context).displayMedium.fontWeight,
+                                                                                        fontStyle: FlutterFlowTheme.of(context).displayMedium.fontStyle,
+                                                                                      ),
+                                                                                ),
+                                                                              ),
+                                                                              Row(
+                                                                                mainAxisSize: MainAxisSize.min,
+                                                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                                                children: [
+                                                                                  Icon(
+                                                                                    Icons.person,
+                                                                                    color: Color(0xCCFFFFFF),
+                                                                                    size: 22.0,
+                                                                                  ),
+                                                                                  Text(
+                                                                                    getJsonField(
+                                                                                      (_model.resulltSiteNewsExt?.jsonBody ?? ''),
+                                                                                      r'''$.items[0].author
+''',
+                                                                                    ).toString(),
+                                                                                    maxLines: 1,
+                                                                                    style: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                          font: GoogleFonts.montserrat(
+                                                                                            fontWeight: FontWeight.w200,
+                                                                                            fontStyle: FlutterFlowTheme.of(context).titleSmall.fontStyle,
+                                                                                          ),
+                                                                                          color: FlutterFlowTheme.of(context).info,
+                                                                                          letterSpacing: 0.0,
+                                                                                          fontWeight: FontWeight.w200,
+                                                                                          fontStyle: FlutterFlowTheme.of(context).titleSmall.fontStyle,
+                                                                                        ),
+                                                                                    overflow: TextOverflow.fade,
+                                                                                  ),
+                                                                                  Icon(
+                                                                                    Icons.date_range,
+                                                                                    color: Color(0xCCFFFFFF),
+                                                                                    size: 22.0,
+                                                                                  ),
+                                                                                  Text(
+                                                                                    getJsonField(
+                                                                                      (_model.resulltSiteNewsExt?.jsonBody ?? ''),
+                                                                                      r'''$.items[0].pubDate
+''',
+                                                                                    ).toString(),
+                                                                                    maxLines: 1,
+                                                                                    style: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                          font: GoogleFonts.montserrat(
+                                                                                            fontWeight: FontWeight.w200,
+                                                                                            fontStyle: FlutterFlowTheme.of(context).titleSmall.fontStyle,
+                                                                                          ),
+                                                                                          color: FlutterFlowTheme.of(context).info,
+                                                                                          letterSpacing: 0.0,
+                                                                                          fontWeight: FontWeight.w200,
+                                                                                          fontStyle: FlutterFlowTheme.of(context).titleSmall.fontStyle,
+                                                                                        ),
+                                                                                    overflow: TextOverflow.visible,
+                                                                                  ),
+                                                                                ].divide(SizedBox(width: 8.0)),
+                                                                              ),
+                                                                              Container(
+                                                                                width: MediaQuery.sizeOf(context).width * 0.5,
+                                                                                decoration: BoxDecoration(),
+                                                                                child: Align(
+                                                                                  alignment: AlignmentDirectional(0.0, 0.0),
+                                                                                  child: AutoSizeText(
+                                                                                    getJsonField(
+                                                                                      (_model.resulltSiteNewsExt?.jsonBody ?? ''),
+                                                                                      r'''$.items[0].description
+''',
+                                                                                    ).toString(),
+                                                                                    textAlign: TextAlign.start,
+                                                                                    maxLines: 3,
+                                                                                    minFontSize: 20.0,
+                                                                                    style: FlutterFlowTheme.of(context).bodyLarge.override(
+                                                                                          font: GoogleFonts.inter(
+                                                                                            fontWeight: FlutterFlowTheme.of(context).bodyLarge.fontWeight,
+                                                                                            fontStyle: FlutterFlowTheme.of(context).bodyLarge.fontStyle,
+                                                                                          ),
+                                                                                          color: Color(0xFFDFDFDF),
+                                                                                          letterSpacing: 1.0,
+                                                                                          fontWeight: FlutterFlowTheme.of(context).bodyLarge.fontWeight,
+                                                                                          fontStyle: FlutterFlowTheme.of(context).bodyLarge.fontStyle,
+                                                                                        ),
+                                                                                    overflow: TextOverflow.ellipsis,
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ].divide(SizedBox(height: 10.0)).around(SizedBox(height: 10.0)),
+                                                                          ),
+                                                                        ),
+                                                                        Align(
+                                                                          alignment: AlignmentDirectional(
+                                                                              1.0,
+                                                                              1.0),
+                                                                          child:
+                                                                              Material(
+                                                                            color:
+                                                                                Colors.transparent,
+                                                                            elevation:
+                                                                                10.0,
+                                                                            shape:
+                                                                                RoundedRectangleBorder(
+                                                                              borderRadius: BorderRadius.circular(20.0),
+                                                                            ),
+                                                                            child:
+                                                                                Container(
+                                                                              width: 150.0,
+                                                                              height: 150.0,
+                                                                              decoration: BoxDecoration(
+                                                                                color: Color(0xCCFFFFFF),
+                                                                                borderRadius: BorderRadius.circular(20.0),
+                                                                                border: Border.all(
+                                                                                  color: Color(0x4DFFFFFF),
+                                                                                  width: 1.0,
+                                                                                ),
+                                                                              ),
+                                                                              child: Padding(
+                                                                                padding: EdgeInsets.all(10.0),
+                                                                                child: BarcodeWidget(
+                                                                                  data: valueOrDefault<String>(
+                                                                                    getJsonField(
+                                                                                      (_model.resulltSiteNewsExt?.jsonBody ?? ''),
+                                                                                      r'''$.items[0].guid''',
+                                                                                    )?.toString(),
+                                                                                    'https://smcc.edu.ph/',
+                                                                                  ),
+                                                                                  barcode: Barcode.qrCode(),
+                                                                                  width: 100.0,
+                                                                                  height: 100.0,
+                                                                                  color: Color(0xFF14181B),
+                                                                                  backgroundColor: Colors.transparent,
+                                                                                  errorBuilder: (_context, _error) => SizedBox(
+                                                                                    width: 100.0,
+                                                                                    height: 100.0,
+                                                                                  ),
+                                                                                  drawText: true,
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Align(
+                                                  alignment:
+                                                      AlignmentDirectional(
+                                                          0.0, 1.0),
+                                                  child: Padding(
+                                                    padding:
+                                                        EdgeInsetsDirectional
+                                                            .fromSTEB(0.0, 0.0,
+                                                                0.0, 16.0),
+                                                    child: smooth_page_indicator
+                                                        .SmoothPageIndicator(
+                                                      controller: _model
+                                                              .pageViewController ??=
+                                                          PageController(
+                                                              initialPage: 0),
+                                                      count: 4,
+                                                      axisDirection:
+                                                          Axis.horizontal,
+                                                      onDotClicked: (i) async {
+                                                        await _model
+                                                            .pageViewController!
+                                                            .animateToPage(
+                                                          i,
+                                                          duration: Duration(
+                                                              milliseconds:
+                                                                  500),
+                                                          curve: Curves.ease,
+                                                        );
+                                                        safeSetState(() {});
+                                                      },
+                                                      effect:
+                                                          smooth_page_indicator
+                                                              .SlideEffect(
+                                                        spacing: 8.0,
+                                                        radius: 8.0,
+                                                        dotWidth: 8.0,
+                                                        dotHeight: 8.0,
+                                                        dotColor:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .secondaryText,
+                                                        activeDotColor:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .info,
+                                                        paintStyle:
+                                                            PaintingStyle.fill,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        } else {
+                                          return Icon(
+                                            Icons.wifi_off_sharp,
+                                            color: FlutterFlowTheme.of(context)
+                                                .primaryText,
+                                            size: 320.0,
+                                          );
+                                        }
+                                      },
                                     ),
                                   ),
                                 ),

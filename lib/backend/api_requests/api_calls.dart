@@ -12,7 +12,7 @@ class RfidUserListCall {
   static Future<ApiCallResponse> call() async {
     return ApiManager.instance.makeApiCall(
       callName: 'rfidUserList',
-      apiUrl: 'http://192.168.0.13:8980/api/attendance_db/rfid/users',
+      apiUrl: 'http://lonita.duckdns.org:8980/api/attendance_db/rfid/users',
       callType: ApiCallType.GET,
       headers: {
         'Authorization': 'Basic bG9naW5zeXM6Zm9vYmFyMTIz',
@@ -35,7 +35,7 @@ class RfidUserCall {
     return ApiManager.instance.makeApiCall(
       callName: 'rfidUser',
       apiUrl:
-          'http://192.168.0.13:8980/api/attendance_db/rfid/${rfidUID}',
+          'http://lonita.duckdns.org:8980/api/attendance_db/rfid/${rfidUID}',
       callType: ApiCallType.GET,
       headers: {
         'Authorization': 'Basic bG9naW5zeXM6Zm9vYmFyMTIz',
@@ -64,7 +64,7 @@ class GoogleUserListCall {
   static Future<ApiCallResponse> call() async {
     return ApiManager.instance.makeApiCall(
       callName: 'googleUserList',
-      apiUrl: 'http://192.168.0.13:8980/api/attendance_db/google/users',
+      apiUrl: 'http://lonita.duckdns.org:8980/api/attendance_db/google/users',
       callType: ApiCallType.GET,
       headers: {
         'Authorization': 'Basic bG9naW5zeXM6Zm9vYmFyMTIz',
@@ -87,7 +87,7 @@ class GoogleUserCall {
     return ApiManager.instance.makeApiCall(
       callName: 'googleUser',
       apiUrl:
-          'http://192.168.0.13:8980/api/attendance_db/google/users/${userKey}',
+          'http://lonita.duckdns.org:8980/api/attendance_db/google/users/${userKey}',
       callType: ApiCallType.GET,
       headers: {
         'Authorization': 'Basic bG9naW5zeXM6Zm9vYmFyMTIz',
@@ -135,7 +135,7 @@ class GoogleUserPhotoCall {
     return ApiManager.instance.makeApiCall(
       callName: 'googleUserPhoto',
       apiUrl:
-          'http://192.168.0.13:8980/api/attendance_db/google/users/${userKey}/photo',
+          'http://lonita.duckdns.org:8980/api/attendance_db/google/users/${userKey}/photo',
       callType: ApiCallType.GET,
       headers: {
         'Authorization': 'Basic bG9naW5zeXM6Zm9vYmFyMTIz',
@@ -181,7 +181,7 @@ class AttendanceLogCall {
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'attendanceLog',
-      apiUrl: 'http://192.168.0.13:8980/api/attendance_db/attendance/log',
+      apiUrl: 'http://lonita.duckdns.org:8980/api/attendance_db/attendance/log',
       callType: ApiCallType.POST,
       headers: {
         'Authorization': 'Basic bG9naW5zeXM6Zm9vYmFyMTIz',
@@ -197,6 +197,116 @@ class AttendanceLogCall {
       alwaysAllowBody: false,
     );
   }
+}
+
+class GetSiteNewsExtCall {
+  static Future<ApiCallResponse> call() async {
+    return ApiManager.instance.makeApiCall(
+      callName: 'getSiteNewsExt',
+      apiUrl: 'https://api.rss2json.com/v1/api.json',
+      callType: ApiCallType.GET,
+      headers: {},
+      params: {
+        'rss_url': "https://smcc.edu.ph/rss",
+      },
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+
+  static List<String>? title(dynamic response) => (getJsonField(
+        response,
+        r'''$.items[:].title''',
+        true,
+      ) as List?)
+          ?.withoutNulls
+          .map((x) => castToType<String>(x))
+          .withoutNulls
+          .toList();
+  static List<String>? pubDate(dynamic response) => (getJsonField(
+        response,
+        r'''$.items[:].pubDate''',
+        true,
+      ) as List?)
+          ?.withoutNulls
+          .map((x) => castToType<String>(x))
+          .withoutNulls
+          .toList();
+  static List<String>? author(dynamic response) => (getJsonField(
+        response,
+        r'''$.items[:].author''',
+        true,
+      ) as List?)
+          ?.withoutNulls
+          .map((x) => castToType<String>(x))
+          .withoutNulls
+          .toList();
+  static List<String>? thumbnail(dynamic response) => (getJsonField(
+        response,
+        r'''$.items[:].thumbnail''',
+        true,
+      ) as List?)
+          ?.withoutNulls
+          .map((x) => castToType<String>(x))
+          .withoutNulls
+          .toList();
+  static List<String>? description(dynamic response) => (getJsonField(
+        response,
+        r'''$.items[:].description''',
+        true,
+      ) as List?)
+          ?.withoutNulls
+          .map((x) => castToType<String>(x))
+          .withoutNulls
+          .toList();
+  static List<String>? guid(dynamic response) => (getJsonField(
+        response,
+        r'''$.items[:].guid''',
+        true,
+      ) as List?)
+          ?.withoutNulls
+          .map((x) => castToType<String>(x))
+          .withoutNulls
+          .toList();
+  static List? categories(dynamic response) => getJsonField(
+        response,
+        r'''$.items[:].categories''',
+        true,
+      ) as List?;
+}
+
+class GetSiteNewsIntCall {
+  static Future<ApiCallResponse> call() async {
+    return ApiManager.instance.makeApiCall(
+      callName: 'getSiteNewsInt',
+      apiUrl: 'https://smcc.edu.ph/wp-json/wp/v2/posts',
+      callType: ApiCallType.GET,
+      headers: {},
+      params: {
+        '_fields': "jetpack_featured_media_url",
+      },
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+
+  static List<String>? image(dynamic response) => (getJsonField(
+        response,
+        r'''$[:].jetpack_featured_media_url''',
+        true,
+      ) as List?)
+          ?.withoutNulls
+          .map((x) => castToType<String>(x))
+          .withoutNulls
+          .toList();
 }
 
 class ApiPagingParams {

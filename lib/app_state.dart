@@ -63,6 +63,12 @@ class FFAppState extends ChangeNotifier {
     _cacheDirectoryJSON = value;
   }
 
+  String _cacheNewsJSON = '';
+  String get cacheNewsJSON => _cacheNewsJSON;
+  set cacheNewsJSON(String value) {
+    _cacheNewsJSON = value;
+  }
+
   bool _startupDone = false;
   bool get startupDone => _startupDone;
   set startupDone(bool value) {
