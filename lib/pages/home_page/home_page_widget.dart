@@ -69,10 +69,16 @@ class _HomePageWidgetState extends State<HomePageWidget>
           safeSetState(() {});
         }
 
-        _model.resulltSiteNewsExt = await GetSiteNewsExtCall.call();
-
-        _model.resulltSiteNewsInt = await GetSiteNewsIntCall.call();
-
+        unawaited(
+          () async {
+            _model.resulltSiteNewsExt = await GetSiteNewsExtCall.call();
+          }(),
+        );
+        unawaited(
+          () async {
+            _model.resulltSiteNewsInt = await GetSiteNewsIntCall.call();
+          }(),
+        );
         FFAppState().startupDone = true;
         FFAppState().update(() {});
       } else {
