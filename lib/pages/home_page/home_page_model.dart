@@ -35,6 +35,7 @@ class HomePageModel extends FlutterFlowModel<HomePageWidget> {
   FocusNode? fieldUserRFIDFocusNode;
   TextEditingController? fieldUserRFIDTextController;
   String? Function(BuildContext, String?)? fieldUserRFIDTextControllerValidator;
+  DateTime? datePicked;
   // Stores action output result for [Backend Call - API (rfidUser)] action in fieldUserRFID widget.
   ApiCallResponse? gotRfidUser;
   // Stores action output result for [Backend Call - API (googleUser)] action in fieldUserRFID widget.

@@ -487,148 +487,249 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                                                           .text);
                                                                   safeSetState(
                                                                       () {});
-                                                                  if (getCurrentTimestamp
-                                                                              .millisecondsSinceEpoch -
-                                                                          FFAppState()
-                                                                              .lastScanTimestamp!
-                                                                              .millisecondsSinceEpoch <
-                                                                      2000) {
+                                                                  if (FFAppState()
+                                                                          .rfidUID ==
+                                                                      259) {
+                                                                    final _datePickedDate =
+                                                                        await showDatePicker(
+                                                                      context:
+                                                                          context,
+                                                                      initialDate:
+                                                                          getCurrentTimestamp,
+                                                                      firstDate:
+                                                                          getCurrentTimestamp,
+                                                                      lastDate:
+                                                                          DateTime(
+                                                                              2050),
+                                                                      builder:
+                                                                          (context,
+                                                                              child) {
+                                                                        return wrapInMaterialDatePickerTheme(
+                                                                          context,
+                                                                          child!,
+                                                                          headerBackgroundColor:
+                                                                              FlutterFlowTheme.of(context).primary,
+                                                                          headerForegroundColor:
+                                                                              FlutterFlowTheme.of(context).info,
+                                                                          headerTextStyle: FlutterFlowTheme.of(context)
+                                                                              .headlineLarge
+                                                                              .override(
+                                                                                font: GoogleFonts.interTight(
+                                                                                  fontWeight: FontWeight.w600,
+                                                                                  fontStyle: FlutterFlowTheme.of(context).headlineLarge.fontStyle,
+                                                                                ),
+                                                                                fontSize: 32.0,
+                                                                                letterSpacing: 0.0,
+                                                                                fontWeight: FontWeight.w600,
+                                                                                fontStyle: FlutterFlowTheme.of(context).headlineLarge.fontStyle,
+                                                                              ),
+                                                                          pickerBackgroundColor:
+                                                                              FlutterFlowTheme.of(context).secondaryBackground,
+                                                                          pickerForegroundColor:
+                                                                              FlutterFlowTheme.of(context).primaryText,
+                                                                          selectedDateTimeBackgroundColor:
+                                                                              FlutterFlowTheme.of(context).primary,
+                                                                          selectedDateTimeForegroundColor:
+                                                                              FlutterFlowTheme.of(context).info,
+                                                                          actionButtonForegroundColor:
+                                                                              FlutterFlowTheme.of(context).primaryText,
+                                                                          iconSize:
+                                                                              24.0,
+                                                                        );
+                                                                      },
+                                                                    );
+
+                                                                    if (_datePickedDate !=
+                                                                        null) {
+                                                                      safeSetState(
+                                                                          () {
+                                                                        _model.datePicked =
+                                                                            DateTime(
+                                                                          _datePickedDate
+                                                                              .year,
+                                                                          _datePickedDate
+                                                                              .month,
+                                                                          _datePickedDate
+                                                                              .day,
+                                                                        );
+                                                                      });
+                                                                    } else if (_model
+                                                                            .datePicked !=
+                                                                        null) {
+                                                                      safeSetState(
+                                                                          () {
+                                                                        _model.datePicked =
+                                                                            getCurrentTimestamp;
+                                                                      });
+                                                                    }
                                                                     if (_shouldSetState)
                                                                       safeSetState(
                                                                           () {});
                                                                     return;
-                                                                  }
-
-                                                                  FFAppState()
-                                                                          .lastScanTimestamp =
-                                                                      getCurrentTimestamp;
-                                                                  FFAppState()
-                                                                      .appStatus = 1;
-                                                                  FFAppState()
-                                                                      .update(
-                                                                          () {});
-                                                                  _model.errorCall =
-                                                                      '0';
-                                                                  safeSetState(
-                                                                      () {});
-                                                                  _model.gotRfidUser =
-                                                                      await RfidUserCall
-                                                                          .call(
-                                                                    rfidUID: int
-                                                                        .tryParse(_model
-                                                                            .fieldUserRFIDTextController
-                                                                            .text),
-                                                                  );
-
-                                                                  _shouldSetState =
-                                                                      true;
-                                                                  if ((_model
-                                                                          .gotRfidUser
-                                                                          ?.succeeded ??
-                                                                      true)) {
-                                                                    if (getJsonField(
-                                                                          (_model.gotRfidUser?.jsonBody ??
-                                                                              ''),
-                                                                          r'''$.rfid_uid''',
-                                                                        ) !=
-                                                                        null) {
-                                                                      FFAppState()
-                                                                              .userID =
-                                                                          getJsonField(
-                                                                        (_model.gotRfidUser?.jsonBody ??
-                                                                            ''),
-                                                                        r'''$.user_id''',
-                                                                      ).toString();
-                                                                      FFAppState()
-                                                                              .scanLock =
-                                                                          true;
-                                                                      safeSetState(
-                                                                          () {});
-                                                                      _model.displayGivenName =
-                                                                          'null';
-                                                                      _model.displayDepartment =
-                                                                          'null';
-                                                                      _model.displayOrgDescription =
-                                                                          'null';
-                                                                      _model.displayFamilyName =
-                                                                          'localFamilyName';
-                                                                      safeSetState(
-                                                                          () {});
-                                                                      _model.gotGoogleUser =
-                                                                          await GoogleUserCall
-                                                                              .call(
-                                                                        userKey:
-                                                                            FFAppState().userID,
-                                                                      );
-
-                                                                      _shouldSetState =
-                                                                          true;
-                                                                      if ((_model
-                                                                              .gotGoogleUser
-                                                                              ?.succeeded ??
-                                                                          true)) {
-                                                                        _model.displayGivenName =
-                                                                            getJsonField(
-                                                                          (_model.gotGoogleUser?.jsonBody ??
-                                                                              ''),
-                                                                          r'''$.givenName''',
-                                                                        ).toString();
-                                                                        _model.displayDepartment =
-                                                                            getJsonField(
-                                                                          (_model.gotGoogleUser?.jsonBody ??
-                                                                              ''),
-                                                                          r'''$.department''',
-                                                                        ).toString();
-                                                                        _model.displayOrgDescription =
-                                                                            getJsonField(
-                                                                          (_model.gotGoogleUser?.jsonBody ??
-                                                                              ''),
-                                                                          r'''$.orgDescription''',
-                                                                        ).toString();
-                                                                        _model.displayFamilyName =
-                                                                            getJsonField(
-                                                                          (_model.gotGoogleUser?.jsonBody ??
-                                                                              ''),
-                                                                          r'''$.familyName''',
-                                                                        ).toString();
+                                                                  } else {
+                                                                    if (getCurrentTimestamp.millisecondsSinceEpoch -
+                                                                            FFAppState().lastScanTimestamp!.millisecondsSinceEpoch <
+                                                                        2000) {
+                                                                      if (_shouldSetState)
                                                                         safeSetState(
                                                                             () {});
-                                                                        _model.userAttendanceLog =
-                                                                            await AttendanceLogCall.call(
-                                                                          userID:
-                                                                              FFAppState().userID,
-                                                                          primaryEmail:
-                                                                              getJsonField(
-                                                                            (_model.gotGoogleUser?.jsonBody ??
+                                                                      return;
+                                                                    }
+
+                                                                    FFAppState()
+                                                                            .lastScanTimestamp =
+                                                                        getCurrentTimestamp;
+                                                                    FFAppState()
+                                                                        .appStatus = 1;
+                                                                    FFAppState()
+                                                                        .update(
+                                                                            () {});
+                                                                    _model.errorCall =
+                                                                        '0';
+                                                                    safeSetState(
+                                                                        () {});
+                                                                    _model.gotRfidUser =
+                                                                        await RfidUserCall
+                                                                            .call(
+                                                                      rfidUID: int.tryParse(_model
+                                                                          .fieldUserRFIDTextController
+                                                                          .text),
+                                                                    );
+
+                                                                    _shouldSetState =
+                                                                        true;
+                                                                    if ((_model
+                                                                            .gotRfidUser
+                                                                            ?.succeeded ??
+                                                                        true)) {
+                                                                      if (getJsonField(
+                                                                            (_model.gotRfidUser?.jsonBody ??
                                                                                 ''),
-                                                                            r'''$.primaryEmail''',
-                                                                          ).toString(),
+                                                                            r'''$.rfid_uid''',
+                                                                          ) !=
+                                                                          null) {
+                                                                        FFAppState().userID =
+                                                                            getJsonField(
+                                                                          (_model.gotRfidUser?.jsonBody ??
+                                                                              ''),
+                                                                          r'''$.user_id''',
+                                                                        ).toString();
+                                                                        FFAppState().scanLock =
+                                                                            true;
+                                                                        safeSetState(
+                                                                            () {});
+                                                                        _model.displayGivenName =
+                                                                            'null';
+                                                                        _model.displayDepartment =
+                                                                            'null';
+                                                                        _model.displayOrgDescription =
+                                                                            'null';
+                                                                        _model.displayFamilyName =
+                                                                            'localFamilyName';
+                                                                        safeSetState(
+                                                                            () {});
+                                                                        _model.gotGoogleUser =
+                                                                            await GoogleUserCall.call(
+                                                                          userKey:
+                                                                              FFAppState().userID,
                                                                         );
 
                                                                         _shouldSetState =
                                                                             true;
-                                                                        if ((_model.userAttendanceLog?.succeeded ??
+                                                                        if ((_model.gotGoogleUser?.succeeded ??
                                                                             true)) {
-                                                                          FFAppState().appStatus =
-                                                                              2;
-                                                                          FFAppState().scanLock =
-                                                                              false;
-                                                                          FFAppState()
-                                                                              .update(() {});
-                                                                          await Future
-                                                                              .delayed(
-                                                                            Duration(
-                                                                              milliseconds: 4000,
-                                                                            ),
-                                                                          );
-                                                                          FFAppState().appStatus =
-                                                                              0;
-                                                                          FFAppState().rfidUID =
-                                                                              0;
-                                                                          FFAppState().userID =
-                                                                              'null';
+                                                                          _model.displayGivenName =
+                                                                              getJsonField(
+                                                                            (_model.gotGoogleUser?.jsonBody ??
+                                                                                ''),
+                                                                            r'''$.givenName''',
+                                                                          ).toString();
+                                                                          _model.displayDepartment =
+                                                                              getJsonField(
+                                                                            (_model.gotGoogleUser?.jsonBody ??
+                                                                                ''),
+                                                                            r'''$.department''',
+                                                                          ).toString();
+                                                                          _model.displayOrgDescription =
+                                                                              getJsonField(
+                                                                            (_model.gotGoogleUser?.jsonBody ??
+                                                                                ''),
+                                                                            r'''$.orgDescription''',
+                                                                          ).toString();
+                                                                          _model.displayFamilyName =
+                                                                              getJsonField(
+                                                                            (_model.gotGoogleUser?.jsonBody ??
+                                                                                ''),
+                                                                            r'''$.familyName''',
+                                                                          ).toString();
                                                                           safeSetState(
                                                                               () {});
+                                                                          _model.userAttendanceLog =
+                                                                              await AttendanceLogCall.call(
+                                                                            userID:
+                                                                                FFAppState().userID,
+                                                                            primaryEmail:
+                                                                                getJsonField(
+                                                                              (_model.gotGoogleUser?.jsonBody ?? ''),
+                                                                              r'''$.primaryEmail''',
+                                                                            ).toString(),
+                                                                          );
+
+                                                                          _shouldSetState =
+                                                                              true;
+                                                                          if ((_model.userAttendanceLog?.succeeded ??
+                                                                              true)) {
+                                                                            FFAppState().appStatus =
+                                                                                2;
+                                                                            FFAppState().scanLock =
+                                                                                false;
+                                                                            FFAppState().update(() {});
+                                                                            await Future.delayed(
+                                                                              Duration(
+                                                                                milliseconds: 4000,
+                                                                              ),
+                                                                            );
+                                                                            FFAppState().appStatus =
+                                                                                0;
+                                                                            FFAppState().rfidUID =
+                                                                                0;
+                                                                            FFAppState().userID =
+                                                                                'null';
+                                                                            safeSetState(() {});
+                                                                          } else {
+                                                                            FFAppState().appStatus =
+                                                                                4;
+                                                                            FFAppState().rfidUID =
+                                                                                0;
+                                                                            FFAppState().userID =
+                                                                                'null';
+                                                                            FFAppState().scanLock =
+                                                                                false;
+                                                                            safeSetState(() {});
+                                                                            unawaited(
+                                                                              () async {
+                                                                                await showDialog(
+                                                                                  context: context,
+                                                                                  builder: (alertDialogContext) {
+                                                                                    return AlertDialog(
+                                                                                      title: Text('userAttendanceLog Status'),
+                                                                                      content: Text('userAttendanceLog failed'),
+                                                                                      actions: [
+                                                                                        TextButton(
+                                                                                          onPressed: () => Navigator.pop(alertDialogContext),
+                                                                                          child: Text('Ok'),
+                                                                                        ),
+                                                                                      ],
+                                                                                    );
+                                                                                  },
+                                                                                );
+                                                                              }(),
+                                                                            );
+                                                                          }
+
+                                                                          if (_shouldSetState)
+                                                                            safeSetState(() {});
+                                                                          return;
                                                                         } else {
                                                                           FFAppState().appStatus =
                                                                               4;
@@ -640,31 +741,24 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                                                               false;
                                                                           safeSetState(
                                                                               () {});
-                                                                          unawaited(
-                                                                            () async {
-                                                                              await showDialog(
-                                                                                context: context,
-                                                                                builder: (alertDialogContext) {
-                                                                                  return AlertDialog(
-                                                                                    title: Text('userAttendanceLog Status'),
-                                                                                    content: Text('userAttendanceLog failed'),
-                                                                                    actions: [
-                                                                                      TextButton(
-                                                                                        onPressed: () => Navigator.pop(alertDialogContext),
-                                                                                        child: Text('Ok'),
-                                                                                      ),
-                                                                                    ],
-                                                                                  );
-                                                                                },
-                                                                              );
-                                                                            }(),
-                                                                          );
-                                                                        }
-
-                                                                        if (_shouldSetState)
+                                                                          _model.errorCall =
+                                                                              'errNoGoogleUser';
                                                                           safeSetState(
                                                                               () {});
-                                                                        return;
+                                                                          await Future
+                                                                              .delayed(
+                                                                            Duration(
+                                                                              milliseconds: 4000,
+                                                                            ),
+                                                                          );
+                                                                          FFAppState().appStatus =
+                                                                              0;
+                                                                          FFAppState()
+                                                                              .update(() {});
+                                                                          if (_shouldSetState)
+                                                                            safeSetState(() {});
+                                                                          return;
+                                                                        }
                                                                       } else {
                                                                         FFAppState()
                                                                             .appStatus = 4;
@@ -672,12 +766,10 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                                                             .rfidUID = 0;
                                                                         FFAppState().userID =
                                                                             'null';
-                                                                        FFAppState().scanLock =
-                                                                            false;
                                                                         safeSetState(
                                                                             () {});
                                                                         _model.errorCall =
-                                                                            'errNoGoogleUser';
+                                                                            'errNoUserId_2';
                                                                         safeSetState(
                                                                             () {});
                                                                         await Future
@@ -701,13 +793,10 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                                                           .appStatus = 4;
                                                                       FFAppState()
                                                                           .rfidUID = 0;
-                                                                      FFAppState()
-                                                                              .userID =
-                                                                          'null';
                                                                       safeSetState(
                                                                           () {});
                                                                       _model.errorCall =
-                                                                          'errNoUserId_2';
+                                                                          'errNoUserId';
                                                                       safeSetState(
                                                                           () {});
                                                                       await Future
@@ -727,33 +816,6 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                                                             () {});
                                                                       return;
                                                                     }
-                                                                  } else {
-                                                                    FFAppState()
-                                                                        .appStatus = 4;
-                                                                    FFAppState()
-                                                                        .rfidUID = 0;
-                                                                    safeSetState(
-                                                                        () {});
-                                                                    _model.errorCall =
-                                                                        'errNoUserId';
-                                                                    safeSetState(
-                                                                        () {});
-                                                                    await Future
-                                                                        .delayed(
-                                                                      Duration(
-                                                                        milliseconds:
-                                                                            4000,
-                                                                      ),
-                                                                    );
-                                                                    FFAppState()
-                                                                        .appStatus = 0;
-                                                                    FFAppState()
-                                                                        .update(
-                                                                            () {});
-                                                                    if (_shouldSetState)
-                                                                      safeSetState(
-                                                                          () {});
-                                                                    return;
                                                                   }
 
                                                                   if (_shouldSetState)
@@ -1301,40 +1363,6 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                                   ),
                                                   Text(
                                                     '${_model.displayGivenName} ${_model.displayFamilyName}',
-                                                    textAlign: TextAlign.center,
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .labelLarge
-                                                        .override(
-                                                          font:
-                                                              GoogleFonts.inter(
-                                                            fontWeight:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .labelLarge
-                                                                    .fontWeight,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .labelLarge
-                                                                    .fontStyle,
-                                                          ),
-                                                          fontSize: 22.0,
-                                                          letterSpacing: 0.0,
-                                                          fontWeight:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .labelLarge
-                                                                  .fontWeight,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .labelLarge
-                                                                  .fontStyle,
-                                                        ),
-                                                  ),
-                                                  Text(
-                                                    '${_model.displayOrgDescription} • ${_model.displayDepartment}',
                                                     textAlign: TextAlign.center,
                                                     style: FlutterFlowTheme.of(
                                                             context)
